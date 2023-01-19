@@ -10,19 +10,19 @@ import * as actions from '../todo.actions';
   templateUrl: './todo-item.component.html',
   styleUrls: ['./todo-item.component.css']
 })
-export class TodoItemComponent implements OnInit{
+export class TodoItemComponent implements OnInit {
 
 
   @Input() todo!: Todo;
-@ViewChild('inputFisico') txtInputFisico!: ElementRef ;
+  @ViewChild('inputFisico') txtInputFisico!: ElementRef;
 
 
-chkCompletado!: FormControl;
-txtInput!: FormControl;
+  chkCompletado!: FormControl;
+  txtInput!: FormControl;
 
-editando: boolean = false;
+  editando: boolean = false;
 
-  constructor(private store: Store<AppState>){
+  constructor(private store: Store<AppState>) {
 
   }
 
@@ -30,25 +30,41 @@ editando: boolean = false;
   ngOnInit(): void {
 
     this.chkCompletado = new FormControl(this.todo.completado);
-    this.txtInput = new FormControl(this.todo.texto , Validators.required);
+    this.txtInput = new FormControl(this.todo.texto, Validators.required);
 
-    this.chkCompletado.valueChanges.subscribe( valor =>{
-      this.store.dispatch(actions.toggle({id : this.todo.id}));
+    this.chkCompletado.valueChanges.subscribe(valor => {
+      this.store.dispatch(actions.toggle({ id: this.todo.id }));
     })
-    
+
   }
 
-  editar(){
+  editar() {
     this.editando = true;
-    setTimeout(()=> {
-     this.txtInputFisico.nativeElement.select(); 
-    },1);
-    
+    this.txtInput.setValue(this.todo.texto);
+
+    setTimeout(() => {
+      this.txtInputFisico.nativeElement.select();
+    }, 1);
+
   }
 
 
-  terminarEdicion(){
+  terminarEdicion() {
     this.editando = false;
+
+    if (this.txtInput.invalid) { return; }
+    if (this.txtInput.value === this.todo.texto) { return; }
+
+    this.store.dispatch(
+      actions.editar({
+        id: this.todo.id,
+        texto: this.txtInput.value
+      })
+    );
+  }
+
+  borrar() {
+    this.store.dispatch(actions.borrar({ id: this.todo.id }));
   }
 
 }

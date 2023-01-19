@@ -1,7 +1,7 @@
 
-import { Action,createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { Todo } from './models/todo.models';
-import { crear, toggle } from './todo.actions';
+import { borrar, crear, editar, limpiarTodos, toggle, toggleAll } from './todo.actions';
 
 
 export const estadoInicial: Todo[] = [
@@ -12,24 +12,47 @@ export const estadoInicial: Todo[] = [
 
 export const _todoReducer = createReducer(estadoInicial,
 
-  on(crear, (state,{texto}) => [...state, new Todo(texto)] ),
+    on(crear, (state, { texto }) => [...state, new Todo(texto)]),
+    
+    on(limpiarTodos, state => state.filter( todo => !todo.completado )),
 
-  on(toggle, (state,{id}) => {
+    on(borrar, (state, { id }) => state.filter(todo => todo.id !== id)),
 
-    return state.map( todo =>{
-        if( todo.id === id){
-            return{
-                ...todo,
-                completado : !todo.completado
-            }
-        }else{
-            return todo;
+    on(toggleAll, (state, { completado })=> state.map( todo => {
+        return {
+            ...todo, completado: completado
         }
-    })
-  }),
+    })),
+
+    on(toggle, (state, { id }) => {
+
+        return state.map(todo => {
+            if (todo.id === id) {
+                return {
+                    ...todo,
+                    completado: !todo.completado
+                }
+            } else {
+                return todo;
+            }
+        })
+    }),
+    on(editar, (state, { id, texto }) => {
+
+        return state.map(todo => {
+            if (todo.id === id) {
+                return {
+                    ...todo,
+                    texto: texto
+                }
+            } else {
+                return todo;
+            }
+        })
+    }),
 );
 
 
-export function todoReducer(state: Todo[]= estadoInicial,action: Action){
-    return _todoReducer(state,action);
+export function todoReducer(state: Todo[] = estadoInicial, action: Action) {
+    return _todoReducer(state, action);
 }

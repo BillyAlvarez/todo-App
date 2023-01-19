@@ -9,7 +9,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { TodoModule } from './todos/todo.module';
 import { FooterComponent } from './footer/footer.component';
-import { todoReducer } from './todos/todo.reducer';
+import { appReducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { todoReducer } from './todos/todo.reducer';
     BrowserModule,
     ReactiveFormsModule,
     TodoModule,
-    StoreModule.forRoot({ todos: todoReducer },{
+    StoreModule.forRoot(appReducers,{
       runtimeChecks: {
         strictStateImmutability: false,
         strictActionImmutability: false,
