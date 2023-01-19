@@ -6,8 +6,10 @@ import { borrar, crear, editar, limpiarTodos, toggle, toggleAll } from './todo.a
 
 export const estadoInicial: Todo[] = [
     new Todo('Tomar desayuno'),
+    new Todo('Trabajar y Estudiar'),
     new Todo('Pololear con mi amorcito'),
-    new Todo('Dormir cucharita')
+    new Todo('Hacer Rutina Ejercicios'),
+    new Todo('Dormir cucharita ;D')
 ];
 
 export const _todoReducer = createReducer(estadoInicial,
